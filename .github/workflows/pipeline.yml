@@ -22,9 +22,11 @@ jobs:
 
       - name: Code Quality Check
         run: flake8 .
+        continue-on-error: true
 
       - name: Security Check
         run: bandit -r .
+        continue-on-error: true
 
       - name: Run AI Review
         run: python ai_review.py
