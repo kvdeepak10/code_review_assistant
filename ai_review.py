@@ -2,9 +2,10 @@ import os
 import google.generativeai as genai
 
 print("AI Review Started...")
+print("API KEY FOUND:", bool(os.getenv("GOOGLE_API_KEY")))
 
 # Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 model = genai.GenerativeModel("gemini-1.5-flash")
 
