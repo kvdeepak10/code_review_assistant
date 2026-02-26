@@ -1,8 +1,9 @@
 name: Code Review Pipeline
 
+
 on:
-pull_request:
-branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: read
