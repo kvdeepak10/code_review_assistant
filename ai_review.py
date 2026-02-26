@@ -37,8 +37,10 @@ Code:
 # Ask Gemini
 response = model.generate_content(prompt)
 
-# Save AI review report
-with open("review_report.md", "w") as f:
-    f.write(response.text)
+print("\n==============================")
+print("      AI REVIEW REPORT")
+print("==============================\n")
 
-print("AI review report generated successfully.")
+print(response.text)
+
+print("\n====== END OF AI REVIEW ======\n")
