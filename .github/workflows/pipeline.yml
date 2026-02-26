@@ -25,3 +25,6 @@ jobs:
 
       - name: Security Check
         run: bandit -r .
+
+      - name: Run AI Review
+        run: python ai_review.py
