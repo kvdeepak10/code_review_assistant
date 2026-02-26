@@ -1,0 +1,27 @@
+name: Code Review Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Install tools
+        run: pip install flake8 bandit
+
+      - name: Code Quality Check
+        run: flake8 .
+
+      - name: Security Check
+        run: bandit -r .
