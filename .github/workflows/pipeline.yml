@@ -1,5 +1,7 @@
 name: Code Review Pipeline
-
+permissions:
+  contents: read
+  pull-requests: write
 on:
   push:
     branches: [main]
@@ -18,7 +20,7 @@ jobs:
           python-version: "3.10"
 
       - name: Install tools
-        run: pip install flake8 bandit google-generativeai
+        run: pip install flake8 bandit google-genai requests
 
       - name: Code Quality Check
         run: flake8 .
@@ -30,5 +32,6 @@ jobs:
 
       - name: Run AI Review
         env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python ai_review.py
