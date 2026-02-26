@@ -6,7 +6,7 @@ print("API KEY FOUND:", bool(os.getenv("GOOGLE_API_KEY")))
 
 # Configure Gemini
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
+print("ENV KEYS:", os.environ.keys())
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Read code context
