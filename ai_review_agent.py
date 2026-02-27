@@ -3,21 +3,22 @@ from google import genai
 
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
-# Read pytest output
-with open("pytest.txt") as f:
-    test = f.read()
+# Read code
+with open("main.py") as f:
+    code = f.read()
 
 prompt = f"""
-You are a Python testing expert.
+You are a senior Python reviewer.
 
-Analyze pytest failures and suggest exact code fixes.
+Provide line-level improvement suggestions.
 
 Return JSON with:
-stage,file, line, type (error), message, original, suggestion
-Stage must be "test"
+stage,file, line, type (warning), message, original, suggestion
+Stage must be "review"
+The file name is main.py.
 
-Pytest output:
-{test}
+Code:
+{code}
 """
 
 res = client.models.generate_content(
@@ -30,4 +31,4 @@ text = res.text.replace("```json","").replace("```","")
 with open("ai.json","w") as f:
     f.write(text)
 
-print("Test AI JSON generated")
+print("Review AI JSON generated")

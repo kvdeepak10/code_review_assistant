@@ -3,22 +3,24 @@ from google import genai
 
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
-# Read pytest output
-with open("pytest.txt") as f:
-    test = f.read()
+# Read bandit findings
+with open("bandit.txt") as f:
+    bandit = f.read()
 
 prompt = f"""
-You are a Python testing expert.
+You are a Python security expert.
 
-Analyze pytest failures and suggest exact code fixes.
+Convert bandit findings into structured JSON issues.
 
 Return JSON with:
 stage,file, line, type (error), message, original, suggestion
-Stage must be "test"
+Stage must be "security"
+Suggestion must be a safe replacement or mitigation.
 
-Pytest output:
-{test}
+Bandit findings:
+{bandit}
 """
+
 
 res = client.models.generate_content(
     model="gemini-2.5-flash-lite",
@@ -30,4 +32,4 @@ text = res.text.replace("```json","").replace("```","")
 with open("ai.json","w") as f:
     f.write(text)
 
-print("Test AI JSON generated")
+print("Security AI JSON generated")

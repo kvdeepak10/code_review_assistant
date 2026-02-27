@@ -30,7 +30,7 @@ jobs:
       - name: Quality AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python quality_ai.py
+        run: python ai_quality_agent.py
 
       - name: Annotate
         run: python annotate.py
@@ -61,7 +61,7 @@ jobs:
       - name: Security AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python security_ai.py
+        run: python ai_security_agent.py
 
       - name: Annotate
         run: python annotate.py
@@ -119,7 +119,7 @@ jobs:
       - name: Run Review AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python ai_review.py
+        run: python ai_review_agent.py
 
       - name: Annotate
         run: python annotate.py
