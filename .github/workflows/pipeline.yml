@@ -2,18 +2,14 @@ name: Code Review Pipeline
 
 on:
   push:
-    branches: [main]
-
-permissions:
-  contents: read
-  pull-requests: write
+    branches: [main, feature/*]
 
 jobs:
-  run:
+  ai-review:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -21,19 +17,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install deps
         run: pip install flake8 bandit google-genai
 
-      - name: Code Quality Check
-        run: flake8 .
-        continue-on-error: true
+      - name: Run validators
+        run: |
+          flake8 . || true
+          bandit -r . || true
 
-      - name: Security Check
-        run: bandit -r .
-        continue-on-error: true
-
-      - name: Run AI Review
+      - name: Run AI review
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python ai_review.py
+
+      - name: Show annotations
+        run: python annotate.py
