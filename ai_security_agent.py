@@ -12,10 +12,17 @@ You are a Python security expert.
 
 Convert bandit findings into structured JSON issues.
 
-Return JSON with:
-stage,file, line, type (error), message, original, suggestion
-Stage must be "security"
-Suggestion must be a safe replacement or mitigation.
+Return ONLY valid JSON array.
+Do NOT add markdown.
+Do NOT add explanation.
+
+Each issue must include:
+stage, file, line, type, message, original, suggestion
+
+Rules:
+- stage must be "security"
+- type must be "error" or "warning"
+- suggestion must be a safe mitigation or replacement
 
 Bandit findings:
 {bandit}

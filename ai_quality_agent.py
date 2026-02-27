@@ -11,10 +11,18 @@ You are a Python code quality expert.
 
 Convert flake8 findings into structured JSON issues.
 
-Return ONLY JSON array with:
-stage,file, line, type (warning), message, original, suggestion
-Stage must be "quality"
-Suggestion must be a minimal replacement line.
+Return ONLY valid JSON array.
+Do NOT add markdown.
+Do NOT add explanation.
+
+Each issue must include:
+stage, file, line, type, message, original, suggestion
+
+Rules:
+- stage must be "quality"
+- type must be "warning"
+- suggestion must be minimal fix line
+- If code should be removed → suggestion = "Remove line"
 
 Flake8 findings:
 {flake}

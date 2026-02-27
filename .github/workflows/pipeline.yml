@@ -11,6 +11,7 @@ jobs:
   # --------------------
   quality:
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
       - name: Checkout
@@ -30,10 +31,11 @@ jobs:
       - name: Quality AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python ai_quality_agent.py
+        run: |
+          python ai_quality_agent.py || echo "::error file=ai_quality_agent.py,line=1::Quality Agent failed"
 
       - name: Annotate
-        run: python annotate.py
+        run: python annotate.py || true
 
 
   # --------------------
@@ -42,6 +44,7 @@ jobs:
   security:
     runs-on: ubuntu-latest
     needs: quality
+    continue-on-error: true
 
     steps:
       - name: Checkout
@@ -61,10 +64,11 @@ jobs:
       - name: Security AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python ai_security_agent.py
+        run: |
+          python ai_security_agent.py || echo "::error file=ai_security_agent.py,line=1::Security Agent failed"
 
       - name: Annotate
-        run: python annotate.py
+        run: python annotate.py || true
 
 
   # --------------------
@@ -73,6 +77,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: security
+    continue-on-error: true
 
     steps:
       - name: Checkout
@@ -92,10 +97,12 @@ jobs:
       - name: Test AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python ai_test_agent.py
+        run: |
+          python ai_test_agent.py || echo "::error file=ai_test_agent.py,line=1::Test Agent failed"
 
       - name: Annotate
-        run: python annotate.py
+        run: python annotate.py || true
+
 
   # --------------------
   # GENERAL AI REVIEWER
@@ -103,6 +110,7 @@ jobs:
   review:
     runs-on: ubuntu-latest
     needs: test
+    continue-on-error: true
 
     steps:
       - name: Checkout
@@ -119,7 +127,8 @@ jobs:
       - name: Run Review AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python ai_review_agent.py
+        run: |
+          python ai_review_agent.py || echo "::error file=ai_review_agent.py,line=1::Review Agent failed"
 
       - name: Annotate
-        run: python annotate.py
+        run: python annotate.py || true

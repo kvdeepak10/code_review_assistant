@@ -12,9 +12,18 @@ You are a senior Python reviewer.
 
 Provide line-level improvement suggestions.
 
-Return JSON with:
-stage,file, line, type (warning), message, original, suggestion
-Stage must be "review"
+Return ONLY valid JSON array.
+Do NOT add markdown.
+Do NOT add explanation.
+
+Each issue must include:
+stage, file, line, type, message, original, suggestion
+
+Rules:
+- stage must be "review"
+- type must be "warning"
+- Focus on readability, best practices, refactoring
+
 The file name is main.py.
 
 Code:
