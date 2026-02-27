@@ -32,3 +32,4 @@ for issue in issues:
         annotation += f" | Fix: {suggestion}"
 
     print(f"::{level} file={file},line={line}::{annotation}")
+    print(f"{file}:{line}: {level}: {annotation}")
