@@ -7,11 +7,11 @@ on:
 jobs:
 
   # --------------------
-  # QUALITY AGENT
+  # QUALITY AGENT (warnings only)
   # --------------------
   quality:
     runs-on: ubuntu-latest
-    continue-on-error: true
+    continue-on-error: true   # quality should not block pipeline
 
     steps:
       - name: Checkout
@@ -31,20 +31,19 @@ jobs:
       - name: Quality AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: |
-          python ai_quality_agent.py || echo "::error file=ai_quality_agent.py,line=1::Quality Agent failed"
+        run: python ai_quality_agent.py
 
       - name: Annotate
-        run: python annotate.py || true
+        run: python annotate.py
 
 
   # --------------------
-  # SECURITY AGENT
+  # SECURITY AGENT (STRICT)
   # --------------------
   security:
     runs-on: ubuntu-latest
     needs: quality
-    continue-on-error: false
+    continue-on-error: false   # MUST fail pipeline
 
     steps:
       - name: Checkout
@@ -59,25 +58,24 @@ jobs:
         run: pip install bandit google-genai
 
       - name: Run bandit
-        run: bandit -r . -f txt -o bandit.txt || true
+        run: bandit -r . -f txt -o bandit.txt
 
       - name: Security AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: |
-          python ai_security_agent.py || echo "::error file=ai_security_agent.py,line=1::Security Agent failed"
+        run: python ai_security_agent.py
 
       - name: Annotate
-        run: python annotate.py || true
+        run: python annotate.py
 
 
   # --------------------
-  # TEST AGENT
+  # TEST AGENT (STRICT)
   # --------------------
   test:
     runs-on: ubuntu-latest
     needs: security
-    continue-on-error: false
+    continue-on-error: false   # stop if tests fail
 
     steps:
       - name: Checkout
@@ -92,16 +90,15 @@ jobs:
         run: pip install pytest google-genai
 
       - name: Run tests
-        run: pytest > pytest.txt || true
+        run: pytest > pytest.txt
 
       - name: Test AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: |
-          python ai_test_agent.py || echo "::error file=ai_test_agent.py,line=1::Test Agent failed"
+        run: python ai_test_agent.py
 
       - name: Annotate
-        run: python annotate.py || true
+        run: python annotate.py
 
 
   # --------------------
@@ -110,7 +107,7 @@ jobs:
   review:
     runs-on: ubuntu-latest
     needs: test
-    continue-on-error: false
+    continue-on-error: true   # review should not block merge
 
     steps:
       - name: Checkout
@@ -127,8 +124,7 @@ jobs:
       - name: Run Review AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: |
-          python ai_review_agent.py || echo "::error file=ai_review_agent.py,line=1::Review Agent failed"
+        run: python ai_review_agent.py
 
       - name: Annotate
-        run: python annotate.py || true
+        run: python annotate.py
