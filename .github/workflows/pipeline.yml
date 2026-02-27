@@ -25,3 +25,24 @@ jobs:
 
       - name: Annotate
         run: python annotate.py
+
+security:
+  runs-on: ubuntu-latest
+  needs: quality
+
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: Install deps
+      run: pip install bandit google-genai
+
+    - name: Run bandit
+      run: bandit -r . -f txt -o bandit.txt || true
+
+    - name: Security AI
+      env:
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      run: python security_ai.py
+
+    - name: Annotate
+      run: python annotate.py

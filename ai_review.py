@@ -18,7 +18,11 @@ Return ONLY valid JSON array.
 Each issue must contain:
 file, line, type (error/warning), message, suggestion
 
-Suggestion must be minimal fix line.
+Suggestion rules:
+- Always provide a suggestion
+- If line should be removed → suggestion = "Remove line"
+- If fix exists → give replacement line
+- Keep suggestion minimal
 
 Code:
 {code}
