@@ -1,19 +1,27 @@
-quality:
-  runs-on: ubuntu-latest
+name: AI Multi Agent Pipeline
 
-  steps:
-    - uses: actions/checkout@v3
+on:
+  push:
+    branches: [main, feature/*]
 
-    - name: Install deps
-      run: pip install flake8 google-genai
+jobs:
 
-    - name: Run flake8
-      run: flake8 . > flake.txt || true
+  quality:
+    runs-on: ubuntu-latest
 
-    - name: Quality AI
-      env:
-        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-      run: python quality_ai.py
+    steps:
+      - uses: actions/checkout@v3
 
-    - name: Annotate
-      run: python annotate.py
+      - name: Install deps
+        run: pip install flake8 google-genai
+
+      - name: Run flake8
+        run: flake8 . > flake.txt || true
+
+      - name: Quality AI
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: python quality_ai.py
+
+      - name: Annotate
+        run: python annotate.py

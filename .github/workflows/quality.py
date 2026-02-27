@@ -9,14 +9,20 @@ with open("flake.txt") as f:
 prompt = f"""
 You are a Python code quality expert.
 
-Convert flake8 findings into JSON issues.
+You will receive flake8 findings.
 
-Return JSON:
-[file, line, type, message, suggestion]
+Convert them into structured JSON issues.
+
+Rules:
+- Return ONLY JSON array
+- Each issue must contain:
+  file, line, type (warning), message, suggestion
+- Suggest minimal replacement line or "Remove line"
 
 Flake8 findings:
 {flake}
 """
+
 
 res = client.models.generate_content(
     model="gemini-2.5-flash",
