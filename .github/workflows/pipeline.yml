@@ -92,7 +92,7 @@ jobs:
       - name: Test AI
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python test_ai.py
+        run: python ai_test_agent.py
 
       - name: Annotate
         run: python annotate.py
