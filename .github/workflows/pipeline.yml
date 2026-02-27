@@ -22,7 +22,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install flake8 bandit google-genai requests
+        run: pip install flake8 bandit google-genai
 
       - name: Code Quality Check
         run: flake8 .
