@@ -54,26 +54,27 @@ jobs:
       - name: Annotate
         run: python annotate.py
 
+
   # --------------------
   # TEST AGENT
   # --------------------
   test:
-  runs-on: ubuntu-latest
-  needs: security
+    runs-on: ubuntu-latest
+    needs: security
 
-  steps:
-    - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-    - name: Install deps
-      run: pip install pytest google-genai
+      - name: Install deps
+        run: pip install pytest google-genai
 
-    - name: Run tests
-      run: pytest > pytest.txt || true
+      - name: Run tests
+        run: pytest > pytest.txt || true
 
-    - name: Test AI
-      env:
-        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-      run: python test_ai.py
+      - name: Test AI
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: python test_ai.py
 
-    - name: Annotate
-      run: python annotate.py
+      - name: Annotate
+        run: python annotate.py
