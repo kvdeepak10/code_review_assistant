@@ -1,48 +1,46 @@
 import os
-import requests
-from google import genai
+import google.generativeai as genai
 
 print("AI Review Started...")
 
-# ===== Gemini Setup =====
-client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+# Read API key from environment (GitHub pipeline passes this)
+api_key = os.getenv("GOOGLE_API_KEY")
 
+print("API KEY FOUND:", bool(api_key))
+
+if not api_key:
+    raise ValueError("GOOGLE_API_KEY not found!")
+
+# Configure Gemini
+genai.configure(api_key=api_key)
+
+# Create model
+model = genai.GenerativeModel("gemini-2.5-flash-lite")
+
+# Read code to review
 with open("main.py", "r") as f:
     code = f.read()
 
 prompt = f"""
 You are an expert code reviewer.
-Review this code and give clear suggestions:
 
+Analyze this Python code and provide:
+
+1. Problems found
+2. Suggestions for improvement
+3. Corrected code example
+
+Code:
 {code}
 """
 
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents=prompt,
-)
+# Ask Gemini
+response = model.generate_content(prompt)
 
-review_text = response.text
+print("\n==============================")
+print("      AI REVIEW REPORT")
+print("==============================\n")
 
-print("AI review generated.")
+print(response.text)
 
-# ===== GitHub Comment Setup =====
-repo = os.getenv("GITHUB_REPOSITORY")
-token = os.getenv("GITHUB_TOKEN")
-run_id = os.getenv("GITHUB_RUN_ID")
-
-url = f"https://api.github.com/repos/{repo}/issues"
-
-headers = {
-    "Authorization": f"token {token}",
-    "Accept": "application/vnd.github+json"
-}
-
-comment_body = {
-    "body": f"## 🤖 AI Code Review\n\n{review_text}"
-}
-
-# NOTE:
-# For demo we print output (next step we attach to PR)
-print("\n===== AI REVIEW =====\n")
-print(review_text)
+print("\n====== END OF AI REVIEW ======\n")
