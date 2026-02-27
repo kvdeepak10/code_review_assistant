@@ -1,3 +1,5 @@
+API_KEY = "123456SECRET"   # ❌ Hardcoded secret (intentional)
+
 def train(data):
 
     if data == None:
