@@ -1,44 +1,40 @@
 import os
-import json
 from google import genai
-
-print("AI Review Started...")
 
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Read code
-with open("main.py", "r") as f:
+with open("main.py") as f:
     code = f.read()
 
 prompt = f"""
-You are an expert Python reviewer.
+You are a senior Python reviewer.
 
-Return ONLY valid JSON array.
+Analyze the code and provide improvement suggestions.
 
-Each issue must contain:
-file, line, type (error/warning), message, suggestion
+Return ONLY JSON array with:
+file, line, type (warning), message, suggestion
 
-Suggestion rules:
-- Always provide a suggestion
-- If line should be removed → suggestion = "Remove line"
-- If fix exists → give replacement line
-- Keep suggestion minimal
+Focus on:
+- Refactoring
+- Best practices
+- Performance
+- Readability
+- Logging vs print
+- Type hints
 
 Code:
 {code}
 """
 
-response = client.models.generate_content(
+res = client.models.generate_content(
     model="gemini-2.5-flash-lite",
-    contents=prompt,
+    contents=prompt
 )
 
-# Clean Gemini markdown
-text = response.text.strip()
-text = text.replace("```json", "").replace("```", "")
+text = res.text.replace("```json","").replace("```","")
 
-# Save output
-with open("ai.json", "w") as f:
+with open("ai.json","w") as f:
     f.write(text)
 
-print("AI JSON saved")
+print("Review AI JSON generated")

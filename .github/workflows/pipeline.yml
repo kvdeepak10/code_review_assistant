@@ -96,3 +96,30 @@ jobs:
 
       - name: Annotate
         run: python annotate.py
+
+  # --------------------
+  # GENERAL AI REVIEWER
+  # --------------------
+  review:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install google-genai
+
+      - name: Run Review AI
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: python ai_review.py
+
+      - name: Annotate
+        run: python annotate.py
