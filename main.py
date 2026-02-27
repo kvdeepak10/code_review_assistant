@@ -1,4 +1,12 @@
-from main import train
+def train(data):
 
-def test_train_none():
-    train(None)
+    if data == None:
+        print("No data")
+
+    x = 10  # unused variable
+
+    for i in range(len(data)):
+        print(data[i])
+
+
+train(None)
