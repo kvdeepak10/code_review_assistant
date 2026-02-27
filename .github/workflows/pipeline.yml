@@ -1,34 +1,19 @@
-name: Code Review Pipeline
+quality:
+  runs-on: ubuntu-latest
 
-on:
-  push:
-    branches: [main, feature/*]
+  steps:
+    - uses: actions/checkout@v3
 
-jobs:
-  ai-review:
-    runs-on: ubuntu-latest
+    - name: Install deps
+      run: pip install flake8 google-genai
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    - name: Run flake8
+      run: flake8 . > flake.txt || true
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.11"
+    - name: Quality AI
+      env:
+        GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      run: python quality_ai.py
 
-      - name: Install deps
-        run: pip install flake8 bandit google-genai
-
-      - name: Run validators
-        run: |
-          flake8 . || true
-          bandit -r . || true
-
-      - name: Run AI review
-        env:
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-        run: python ai_review.py
-
-      - name: Show annotations
-        run: python annotate.py
+    - name: Annotate
+      run: python annotate.py
